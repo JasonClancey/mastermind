@@ -21,17 +21,17 @@ module Display
 
     def display_request_player_input(title)
         puts <<~HEREDOC
-        Code #{title}, please enter a four digit code.
+        Please enter a four digit code.
         This must be composed of integers between 1 and 6:
       HEREDOC
     end
 
-    def display code_is_valid
+    def display_code_is_valid
         puts 'Code accepted.'
     end
 
-    def display code_is_invalid
-        puts 'Invalid code.'
+    def display_code_is_invalid
+        puts "Invalid code. Please retry \n"
     end
 
 end
