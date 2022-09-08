@@ -1,41 +1,31 @@
 class Game
-    require_relative 'code_maker_and_breaker'
-    attr_reader :maker, :breaker
+    require_relative 'code_maker_and_breaker', 'player', 'display'
+    attr_reader :maker, :breaker, :correct, :difference_in_codes
+
+    include Display
 
     def initialize
-        @breaker = CodeMakerAndBreaker.new
-        @maker = CodeMakerAndBreaker.new
+        @breaker = SecretCode.new
+        @maker = SecretCode.new
         @game_over = false
+        @turn = 0
         @correct = 0
         @difference_in_codes = 0
-    end
-
-    def human_is_breaker
-        @breaker.player = 'human'
-        @breaker.title = 'breaker'
-        @maker.player = 'computer'
-    end
-
-    def human_is_maker
-        @maker.player = 'human'
-        @maker.title = 'maker'
-        @breaker.player = 'computer'
+        @player = nil
     end
 
     def breaker_or_maker?
-        puts <<~HEREDOC
-          Would you like to be the code breaker or code maker?
-          Enter 1 to be the code breaker.
-          Enter 2 to be the code maker.
-        HEREDOC
+        display_choose_player_type
         selection = gets.chomp.to_i
         case selection
         when 1
-            self.human_is_breaker
+            title = 'breaker'
+            @player = Player.new(title)
         when 2
-            self.human_is_maker
+            title = 'maker'
+            @player = Player.new(title)
         else
-            puts "Invalid selection. Please retry.\n"
+            display_invalid_player_selection
             self.breaker_or_maker?
         end
     end
@@ -55,21 +45,16 @@ class Game
             i += 1
         end
         @difference_in_codes = @breaker.secret_code.difference(@maker.secret_code).length
+        display_comparison_results(@correct, @difference_in_codes)
     end
 
-    def display_comparison_results
-        puts <<~HEREDOC
-          There are #{@correct} digits in the correct place.
-          There are #{4 - @difference_in_codes - @correct} digits that are in the code, but in the wrong place.
-        HEREDOC
+    def reset_comparison_values
+        @correct = 0
+        @difference_in_codes = 0
+    end
+
+    def take_turn
+
     end
 
 end
-
-game = Game.new
-game.breaker_or_maker?
-game.breaker.player_input
-game.breaker.valid_code?
-game.maker.computer_input
-game.compare_secret_codes
-game.display_comparison_results
