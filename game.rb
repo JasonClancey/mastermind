@@ -1,5 +1,7 @@
 class Game
-    require_relative 'code_maker_and_breaker', 'player', 'display'
+    require_relative 'secret_codes'
+    require_relative 'player'
+    require_relative 'display'
     attr_reader :maker, :breaker, :correct, :difference_in_codes
 
     include Display
@@ -30,9 +32,17 @@ class Game
         end
     end
 
-    def game_over?
-        if @breaker.secret_code.eql?(@maker.secret_code)
+    def breaker_wins?
+        if @breaker.secret_code.eql?(@maker.secret_code) && @turn <= 11
+            display_breaker_wins
             @game_over = true
+        end
+    end
+
+    def maker_wins?
+        if @breaker.secret_code.eql?(@maker.secret_code) == false && @turn > 11
+        display_maker_wins
+        @game_over = true
         end
     end
 
@@ -53,8 +63,34 @@ class Game
         @difference_in_codes = 0
     end
 
-    def take_turn
+    def set_up_game
+        display_intro
+        breaker_or_maker?
+        case @player.title
+        when 'breaker'
+            @maker.choose_computer_code
+        when 'maker'
+            @maker.choose_player_code
+        end
+    end
 
+    def breaker_take_turn
+        while @turn <= 11 && @game_over == false
+            case @player.title
+            when 'breaker'
+                @breaker.choose_player_code
+            when 'maker'
+                @breaker.choose_computer_code
+                display_computer_code
+                sleep 2
+            end
+        compare_secret_codes
+        reset_comparison_values
+        breaker_wins?
+        @turn += 1
+        puts "The current turn is #{@turn}."
+        end
+        maker_wins?
     end
 
 end
