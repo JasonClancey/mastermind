@@ -54,7 +54,7 @@ class Game
             end
             i += 1
         end
-        @difference_in_codes = @breaker.secret_code.difference(@maker.secret_code).length
+        @difference_in_codes = @maker.secret_code.difference(@breaker.secret_code).length
         display_comparison_results(@correct, @difference_in_codes)
     end
 
@@ -89,6 +89,7 @@ class Game
         breaker_wins?
         @turn += 1
         puts "The current turn is #{@turn}."
+        puts @maker.secret_code.join
         end
         maker_wins?
     end
