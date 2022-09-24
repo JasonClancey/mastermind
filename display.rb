@@ -45,7 +45,7 @@ module Display
     end
 
     def display_code_is_invalid
-        puts "Invalid code. Please retry \n"
+        puts "Invalid code. Please retry."
     end
 
     def display_breaker_wins
